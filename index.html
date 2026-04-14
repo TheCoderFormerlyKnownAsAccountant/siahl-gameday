@@ -1,435 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#04121e" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="SIAHL Game Day" />
-  <title>Sharks Ice · SIAHL Game Day Viewer</title>
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#04121e"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="SIAHL Game Day"/>
+  <title>Sharks Ice · Beer League</title>
   <script>
-    const _manifest = {
-      name: "Sharks Ice · SIAHL Game Day Viewer",
-      short_name: "SIAHL Game Day",
-      description: "Live SIAHL game schedule viewer — current season only",
-      start_url: ".", display: "standalone", orientation: "portrait",
-      background_color: "#04121e", theme_color: "#04121e",
-      icons: [
-        { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%2304121e'/%3E%3Ccircle cx='96' cy='96' r='78' fill='%23071c2c'/%3E%3Ctext x='96' y='128' text-anchor='middle' font-size='88' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
-        { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%2304121e'/%3E%3Ccircle cx='256' cy='256' r='210' fill='%23071c2c'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='240' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
-      ]
-    };
-    document.addEventListener('DOMContentLoaded', () => {
-      const blob = new Blob([JSON.stringify(_manifest)], { type: 'application/manifest+json' });
-      const link = document.createElement('link'); link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
-      document.head.appendChild(link);
+    document.addEventListener('DOMContentLoaded',()=>{
+      const m={name:"SIAHL Beer League Game Day",short_name:"Beer League",description:"Sharks Ice SIAHL beer league schedule",start_url:".",display:"standalone",orientation:"portrait",background_color:"#04121e",theme_color:"#04121e",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%2304121e'/%3E%3Ctext x='96' y='136' text-anchor='middle' font-size='120' font-family='system-ui'%3E%F0%9F%8D%BA%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
+      const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'});
+      const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);
+      document.head.appendChild(l);
     });
   </script>
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%2304121e'/%3E%3Ccircle cx='90' cy='90' r='74' fill='%23071c2c'/%3E%3Ctext x='90' y='120' text-anchor='middle' font-size='82' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%2304121e'/%3E%3Ctext x='90' y='126' text-anchor='middle' font-size='108' font-family='system-ui'%3E%F0%9F%8D%BA%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg:      #04121e;
-      --surface: rgba(255,255,255,0.035);
-      --border:  rgba(255,255,255,0.07);
-      --teal:    #00bcd4;
-      --cyan:    #00e5ff;
-      --dim:     rgba(0,188,212,0.15);
-      --text:    #ddeef5;
-      --muted:   rgba(221,238,245,0.45);
-      --faint:   rgba(221,238,245,0.22);
-      --gold:    #ffb300;
-    }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    html, body { height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
-    body::before {
-      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-      background: radial-gradient(ellipse 70% 40% at 15% 5%, rgba(0,90,140,0.2) 0%, transparent 65%),
-                  radial-gradient(ellipse 50% 35% at 85% 85%, rgba(0,50,90,0.13) 0%, transparent 60%);
-    }
-
-    /* ── HEADER ── */
-    #hdr {
-      position:fixed; top:0; left:0; right:0; z-index:100;
-      background:rgba(4,18,30,0.92);
-      backdrop-filter:blur(18px) saturate(1.5);
-      -webkit-backdrop-filter:blur(18px) saturate(1.5);
-      border-bottom:1px solid rgba(0,188,212,0.18);
-      padding-top:env(safe-area-inset-top,0px);
-    }
-    #hdr-top { display:flex; align-items:center; gap:11px; padding:12px 16px 8px; }
-    #logo {
-      width:38px; height:38px; border-radius:11px; flex-shrink:0;
-      background:linear-gradient(135deg,#005f7a,#002535);
-      display:flex; align-items:center; justify-content:center; font-size:21px;
-      box-shadow:0 0 16px rgba(0,188,212,0.25);
-    }
-    #app-name { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; letter-spacing:1px; color:#fff; line-height:1; }
-    #app-sub { font-size:10px; color:var(--muted); margin-top:2px; }
-    #app-sub span { color:var(--teal); opacity:.8; }
-    #status { font-size:10px; color:var(--faint); margin-top:1px; }
-    #status b { color:var(--teal); }
-    #rfbtn {
-      background:var(--dim); border:1px solid rgba(0,188,212,0.28); color:var(--teal);
-      border-radius:9px; padding:6px 11px; font-size:12px; font-weight:600;
-      font-family:'DM Sans',sans-serif; cursor:pointer; display:flex; align-items:center; gap:4px;
-    }
-    #rfbtn:active { opacity:.6; }
-    #rfbtn.spin .ico { display:inline-block; animation:spin .7s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-
-    /* ── LEAGUE SELECTOR ── */
-    #league-row { display:flex; gap:7px; padding:0 14px 9px; }
-    .ltab {
-      flex:1; padding:7px 4px; border-radius:10px; border:1px solid var(--border);
-      background:var(--surface); color:var(--muted); font-size:12px; font-weight:600;
-      font-family:'DM Sans',sans-serif; cursor:pointer; text-align:center; transition:all .15s;
-    }
-    .ltab.active {
-      border-color:var(--teal); background:rgba(0,188,212,0.18);
-      color:var(--cyan); box-shadow:0 0 10px rgba(0,188,212,0.15);
-    }
-    .ltab:active { opacity:.7; }
-
-    /* ── DATE STRIP ── */
-    #date-scroll { overflow-x:auto; white-space:nowrap; padding:0 14px 11px; scrollbar-width:none; }
-    #date-scroll::-webkit-scrollbar { display:none; }
-    .dchip {
-      display:inline-block; padding:6px 13px; border-radius:20px;
-      border:1px solid var(--border); background:var(--surface);
-      color:var(--muted); font-size:12px; font-weight:500;
-      cursor:pointer; user-select:none; transition:all .15s; margin-right:6px;
-    }
-    .dchip.active { border-color:var(--teal); background:rgba(0,188,212,0.18); color:var(--cyan); font-weight:700; }
-    .dchip.today::after { content:' ·'; color:var(--gold); }
-
-    /* ── MAIN ── */
-    #main { position:relative; z-index:1; padding:0 13px 56px; padding-top:calc(var(--hh,140px) + 14px); }
-
-    /* ── DAY BANNER ── */
-    #day-banner {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 14px; border-radius:12px;
-      background:var(--surface); border:1px solid var(--border); margin-bottom:14px;
-    }
-    #day-banner .dname { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; color:#fff; }
-    #day-stats { display:flex; gap:16px; }
-    .stat .v { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color:var(--cyan); line-height:1; }
-    .stat .l { font-size:9px; color:var(--faint); text-transform:uppercase; letter-spacing:.7px; }
-
-    /* ── DIVISION CARD ── */
-    .div-card { background:var(--surface); border:1px solid var(--border); border-radius:15px; margin-bottom:12px; overflow:hidden; animation:rise .25s ease both; }
-    @keyframes rise { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-    .div-hdr { display:flex; align-items:center; justify-content:space-between; padding:13px 15px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.025); border-bottom:1px solid var(--border); }
-    .div-hdr:active { background:rgba(255,255,255,0.045); }
-    .div-left { display:flex; align-items:center; gap:10px; }
-    .div-icon { width:29px; height:29px; border-radius:8px; flex-shrink:0; background:linear-gradient(135deg,rgba(0,188,212,0.2),rgba(0,96,100,0.2)); border:1px solid rgba(0,188,212,0.2); display:flex; align-items:center; justify-content:center; font-size:14px; }
-    .div-name { font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:.6px; color:#fff; }
-    .div-badge { background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; border-radius:10px; padding:1px 7px; }
-    .div-chev { color:var(--faint); font-size:11px; transition:transform .2s; }
-    .div-card.closed .div-chev { transform:rotate(-90deg); }
-    .div-card.closed .div-body { display:none; }
-    .div-body { padding:11px 13px; }
-
-    /* ── GAME CARD ── */
-    .game-card {
-      background:rgba(255,255,255,0.028); border:1px solid rgba(255,255,255,0.055);
-      border-radius:10px; padding:11px 12px; margin-bottom:8px;
-      cursor:pointer; transition:border-color .15s, background .15s;
-      text-decoration:none; display:block; color:inherit;
-    }
-    .game-card:last-child { margin-bottom:0; }
-    .game-card:active { border-color:rgba(0,188,212,0.35); background:rgba(0,188,212,0.06); }
-    .game-card.no-link { cursor:default; }
-
-    .game-top { display:flex; align-items:center; gap:7px; margin-bottom:7px; flex-wrap:wrap; }
-    .gtime { background:var(--dim); color:var(--teal); font-size:11px; font-weight:700; letter-spacing:.7px; padding:2px 9px; border-radius:20px; font-family:'Rajdhani',sans-serif; white-space:nowrap; }
-    .grink { color:var(--faint); font-size:11px; }
-    .glr-home, .glr-away {
-      font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px;
-      font-family:'Rajdhani',sans-serif; letter-spacing:.5px; white-space:nowrap;
-    }
-    .glr-home { background:rgba(0,188,212,0.18); color:var(--cyan); }
-    .glr-away { background:rgba(255,179,0,0.15); color:var(--gold); }
-    .scoresheet-hint { font-size:10px; color:var(--faint); margin-left:auto; }
-    .game-card:not(.no-link) .scoresheet-hint { color:rgba(0,188,212,0.5); }
-
-    .game-matchup { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-    .teams { flex:1; font-size:13.5px; font-weight:500; line-height:1.5; }
-    .teams .away { color:#d4edf5; }
-    .teams .vs { color:var(--faint); font-size:11px; font-weight:400; margin:0 5px; }
-    .teams .home { color:#c2e8f0; }
-    .winner { font-weight:700; color:#fff !important; }
-    .score-box { background:linear-gradient(135deg,rgba(0,188,212,0.16),rgba(0,140,120,0.16)); border:1px solid rgba(0,188,212,0.25); border-radius:8px; padding:5px 10px; text-align:center; min-width:52px; flex-shrink:0; }
-    .score-v { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:800; color:var(--cyan); line-height:1; }
-    .score-l { font-size:8px; color:var(--faint); text-transform:uppercase; letter-spacing:1px; }
-
-    /* ── STATES ── */
-    .empty { text-align:center; padding:70px 20px; color:var(--faint); }
-    .empty .ico { font-size:44px; margin-bottom:14px; }
-    .empty .msg { font-size:14px; line-height:1.55; }
-    .err-bar { background:rgba(239,83,80,.09); border:1px solid rgba(239,83,80,.28); color:#ef9a9a; border-radius:12px; padding:13px 15px; margin-bottom:14px; font-size:13px; line-height:1.5; }
-    .err-bar small { display:block; opacity:.65; margin-top:3px; font-size:11px; }
-    .dots { display:flex; justify-content:center; align-items:center; gap:7px; padding:60px 0; }
-    .dot { width:8px; height:8px; border-radius:50%; background:var(--teal); animation:pulse 1.2s ease-in-out infinite; }
+    :root{--bg:#04121e;--surface:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.07);--teal:#00bcd4;--cyan:#00e5ff;--dim:rgba(0,188,212,0.15);--text:#ddeef5;--muted:rgba(221,238,245,0.45);--faint:rgba(221,238,245,0.22);--gold:#ffb300;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 70% 40% at 15% 5%,rgba(0,90,140,0.2) 0%,transparent 65%),radial-gradient(ellipse 50% 35% at 85% 85%,rgba(0,50,90,0.13) 0%,transparent 60%);}
+    #hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(4,18,30,0.92);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);border-bottom:1px solid rgba(0,188,212,0.18);padding-top:env(safe-area-inset-top,0px);}
+    #hdr-top{display:flex;align-items:center;gap:11px;padding:12px 16px 8px;}
+    #logo{width:38px;height:38px;border-radius:11px;flex-shrink:0;background:linear-gradient(135deg,#4a2800,#1a0e00);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 16px rgba(255,179,0,0.2);}
+    #app-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;color:#fff;line-height:1;}
+    #app-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+    #app-sub span{color:var(--gold);opacity:.8;}
+    #status{font-size:10px;color:var(--faint);margin-top:1px;}
+    #status b{color:var(--teal);}
+    #rfbtn{background:var(--dim);border:1px solid rgba(0,188,212,0.28);color:var(--teal);border-radius:9px;padding:6px 11px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;}
+    #rfbtn:active{opacity:.6;}
+    #rfbtn.spin .ico{display:inline-block;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    #date-scroll{overflow-x:auto;white-space:nowrap;padding:0 14px 11px;scrollbar-width:none;}
+    #date-scroll::-webkit-scrollbar{display:none;}
+    .dchip{display:inline-block;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;user-select:none;transition:all .15s;margin-right:6px;}
+    .dchip.active{border-color:var(--teal);background:rgba(0,188,212,0.18);color:var(--cyan);font-weight:700;}
+    .dchip.today::after{content:' ·';color:var(--gold);}
+    #main{position:relative;z-index:1;padding:0 13px 56px;padding-top:calc(var(--hh,110px) + 14px);}
+    #day-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin-bottom:14px;}
+    #day-banner .dname{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;}
+    #day-stats{display:flex;gap:16px;}
+    .stat .v{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--cyan);line-height:1;}
+    .stat .l{font-size:9px;color:var(--faint);text-transform:uppercase;letter-spacing:.7px;}
+    .div-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;margin-bottom:12px;overflow:hidden;animation:rise .25s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .div-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer;user-select:none;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--border);}
+    .div-hdr:active{background:rgba(255,255,255,0.045);}
+    .div-left{display:flex;align-items:center;gap:10px;}
+    .div-icon{width:29px;height:29px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,rgba(0,188,212,0.2),rgba(0,96,100,0.2));border:1px solid rgba(0,188,212,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+    .div-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.6px;color:#fff;}
+    .div-badge{background:rgba(255,255,255,0.07);color:var(--muted);font-size:11px;border-radius:10px;padding:1px 7px;}
+    .div-chev{color:var(--faint);font-size:11px;transition:transform .2s;}
+    .div-card.closed .div-chev{transform:rotate(-90deg);}
+    .div-card.closed .div-body{display:none;}
+    .div-body{padding:11px 13px;}
+    .game-card{background:rgba(255,255,255,0.028);border:1px solid rgba(255,255,255,0.055);border-radius:10px;padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;text-decoration:none;display:block;color:inherit;}
+    .game-card:last-child{margin-bottom:0;}
+    .game-card:active{border-color:rgba(0,188,212,0.35);background:rgba(0,188,212,0.06);}
+    .game-card.no-link{cursor:default;}
+    .game-top{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+    .gtime{background:var(--dim);color:var(--teal);font-size:11px;font-weight:700;letter-spacing:.7px;padding:2px 9px;border-radius:20px;font-family:'Rajdhani',sans-serif;white-space:nowrap;}
+    .grink{color:var(--faint);font-size:11px;}
+    .glr-home,.glr-away{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;white-space:nowrap;}
+    .glr-home{background:rgba(0,188,212,0.18);color:var(--cyan);}
+    .glr-away{background:rgba(255,179,0,0.15);color:var(--gold);}
+    .ss-hint{font-size:10px;color:rgba(0,188,212,0.5);margin-left:auto;white-space:nowrap;}
+    .game-matchup{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .teams{flex:1;font-size:13.5px;font-weight:500;line-height:1.5;}
+    .teams .away{color:#d4edf5;}
+    .teams .vs{color:var(--faint);font-size:11px;font-weight:400;margin:0 5px;}
+    .teams .home{color:#c2e8f0;}
+    .winner{font-weight:700;color:#fff!important;}
+    .score-box{background:linear-gradient(135deg,rgba(0,188,212,0.16),rgba(0,140,120,0.16));border:1px solid rgba(0,188,212,0.25);border-radius:8px;padding:5px 10px;text-align:center;min-width:52px;flex-shrink:0;}
+    .score-v{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:800;color:var(--cyan);line-height:1;}
+    .score-l{font-size:8px;color:var(--faint);text-transform:uppercase;letter-spacing:1px;}
+    .empty{text-align:center;padding:70px 20px;color:var(--faint);}
+    .empty .ico{font-size:44px;margin-bottom:14px;}
+    .empty .msg{font-size:14px;line-height:1.55;}
+    .err-bar{background:rgba(239,83,80,.09);border:1px solid rgba(239,83,80,.28);color:#ef9a9a;border-radius:12px;padding:13px 15px;margin-bottom:14px;font-size:13px;line-height:1.5;}
+    .err-bar small{display:block;opacity:.65;margin-top:3px;font-size:11px;}
+    .dots{display:flex;justify-content:center;align-items:center;gap:7px;padding:60px 0;}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.2s ease-in-out infinite;}
     .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
     @keyframes pulse{0%,80%,100%{transform:scale(.55);opacity:.25}40%{transform:scale(1);opacity:1}}
   </style>
 </head>
 <body>
-
 <div id="hdr">
   <div id="hdr-top">
-    <div id="logo">🦈</div>
+    <div id="logo">🍺</div>
     <div style="flex:1">
-      <div id="app-name">SHARKS ICE</div>
-      <div id="app-sub">SIAHL Game Day Viewer &nbsp;·&nbsp; <span>Current season only</span></div>
+      <div id="app-name">BEER LEAGUE</div>
+      <div id="app-sub">SIAHL @ Sharks Ice &nbsp;·&nbsp; <span>Current season only</span></div>
       <div id="status">Loading…</div>
     </div>
     <button id="rfbtn" onclick="doFetch()"><span class="ico">↻</span> Refresh</button>
   </div>
-  <div id="league-row">
-    <button class="ltab active" id="ltab-beer" onclick="switchLeague('beer')">🍺 Beer League</button>
-    <button class="ltab" id="ltab-hs" onclick="switchLeague('hs')">🏒 High School</button>
-  </div>
   <div id="date-scroll"><div id="date-strip"></div></div>
 </div>
-
 <div id="main">
   <div id="content">
     <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
   </div>
 </div>
-
 <script>
-/* ══════════════════════════════════════════
-   CONFIG
-   ══════════════════════════════════════════ */
-const BASE = 'https://stats.sharksice.timetoscore.com';
-const LEAGUES = {
-  beer: {
-    label: 'Beer League',
-    urls: [`${BASE}/display-schedule.php?stat_class=1&league=1&season=74`],
-    lrUrl: `${BASE}/display-lr-assignments.php`,
-  },
-  hs: {
-    label: 'High School',
-    urls: [
-      `${BASE}/display-schedule.php?stat_class=1&league=7&season=73`,
-      `${BASE}/display-schedule.php?stat_class=1&league=7&level=182&conf=0&season=73`,
-    ],
-    lrUrl: null,
-  },
-};
-const PROXIES = [
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
-  u => `https://thingproxy.freeboard.io/fetch/${u}`,
+const BASE='https://stats.sharksice.timetoscore.com';
+const SCHED_URL=BASE+'/display-schedule.php?stat_class=1&league=1&season=74';
+const LR_URL=BASE+'/display-lr-assignments.php';
+const PROXIES=[
+  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u),
+  u=>'https://thingproxy.freeboard.io/fetch/'+u,
 ];
-const REFRESH_MS = 5 * 60 * 1000;
+const REFRESH_MS=5*60*1000;
+const MONTHS={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+const MLONG=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-/* ══════════════════════════════════════════
-   STATE
-   ══════════════════════════════════════════ */
-let curLeague = 'beer';
-let games = [], dates = [], selDate = '';
-let locker = {};       // gameId -> { homeLR, awayLR, homeTeam, awayTeam }
-let refreshTO = null, cdInterval = null, cdSecs = REFRESH_MS / 1000;
-let busy = false;
+let games=[],dates=[],selDate='',locker={};
+let refreshTO=null,cdInterval=null,cdSecs=REFRESH_MS/1000,busy=false;
 
-/* ══════════════════════════════════════════
-   DATE HELPERS
-   ══════════════════════════════════════════ */
-const MONTHS = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
-const MLONG  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-function parseRawDate(raw) {
-  const parts = raw.trim().split(/\s+/);
-  if (parts.length < 3) return null;
-  const mon = MONTHS[parts[1]], day = parseInt(parts[2], 10);
-  if (!mon || isNaN(day)) return null;
-  const now = new Date();
-  let year = now.getFullYear();
-  if (mon < now.getMonth() + 1 - 6) year++;
-  return `${year}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+function parseDate(raw){
+  const p=raw.trim().split(/\s+/);
+  if(p.length<3)return null;
+  const mon=MONTHS[p[1]],day=parseInt(p[2],10);
+  if(!mon||isNaN(day))return null;
+  const now=new Date();let yr=now.getFullYear();
+  if(mon<now.getMonth()-4)yr++;
+  return yr+'-'+String(mon).padStart(2,'0')+'-'+String(day).padStart(2,'0');
 }
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function chipLabel(iso){const[y,m,d]=iso.split('-').map(Number);const dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(y,m-1,d).getDay()];return dow+' '+MLONG[m-1]+' '+d;}
+function longLabel(iso){const[y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
 
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function chipLabel(iso) {
-  const [y,m,d] = iso.split('-').map(Number);
-  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(y,m-1,d).getDay()];
-  return `${dow} ${MLONG[m-1]} ${d}`;
-}
-
-function longLabel(iso) {
-  const [y,m,d] = iso.split('-').map(Number);
-  return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-}
-
-/* ══════════════════════════════════════════
-   PARSE SCHEDULE HTML
-   Cols: 0=GameID, 1=Date, 2=Time, 3=Rink,
-         4=League, 5=Division, 6=Away, 7=AwayG,
-         8=Home, 9=HomeG, 10=Type, 11=Scoresheet
-   ══════════════════════════════════════════ */
-function parseSchedule(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const result = [];
-  doc.querySelectorAll('table tr').forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length < 10) return;
-    const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
-
-    const rawDate = c(1);
-    if (!rawDate.match(/[A-Z][a-z]+ [A-Z][a-z]+ \d+/)) return;
-    const iso = parseRawDate(rawDate);
-    if (!iso) return;
-
-    // Extract game ID from first cell (may be a link like "571725*" or plain "572770")
-    const rawId = cells[0]?.textContent.replace(/\u00a0/g,' ').trim().replace('*','') ?? '';
-    const gameId = rawId.match(/^\d+$/) ? rawId : null;
-
-    // Scoresheet link: <a href="oss-scoresheet?game_id=571725&mode=display">
-    const ssLink = cells[0]?.querySelector('a[href*="oss-scoresheet"]');
-    const scoresheetUrl = ssLink ? `${BASE}/${ssLink.getAttribute('href')}` : null;
-
-    const awayG = c(7), homeG = c(9);
-    result.push({
-      date: iso, time: c(2),
-      rink: c(3).replace(/San Jose\s*/i,'').trim(),
-      division: c(5) || 'Unknown Division',
-      away: c(6), awayG,
-      home: c(8), homeG,
-      awayWins: !!(awayG && homeG && parseInt(awayG) > parseInt(homeG)),
-      homeWins: !!(awayG && homeG && parseInt(homeG) > parseInt(awayG)),
-      hasScore: !!(awayG && homeG),
-      gameId,
-      scoresheetUrl,
-    });
+function parseSchedule(html){
+  const doc=new DOMParser().parseFromString(html,'text/html'),result=[];
+  doc.querySelectorAll('table tr').forEach(row=>{
+    const cells=row.querySelectorAll('td');
+    if(cells.length<10)return;
+    const c=i=>cells[i]?.textContent.replace(/\u00a0/g,' ').trim()??'';
+    if(!c(1).match(/[A-Z][a-z]+ [A-Z][a-z]+ \d+/))return;
+    const iso=parseDate(c(1));if(!iso)return;
+    const rawId=cells[0]?.textContent.replace(/\u00a0/g,' ').trim().replace('*','')??'';
+    const gameId=rawId.match(/^\d+$/)?rawId:null;
+    const ssEl=cells[0]?.querySelector('a[href*="oss-scoresheet"]');
+    const scoresheetUrl=ssEl?BASE+'/'+ssEl.getAttribute('href'):null;
+    const awayG=c(7),homeG=c(9);
+    result.push({date:iso,time:c(2),rink:c(3).replace(/San Jose\s*/i,'').trim(),division:c(5)||'Unknown',away:c(6),awayG,home:c(8),homeG,awayWins:!!(awayG&&homeG&&parseInt(awayG)>parseInt(homeG)),homeWins:!!(awayG&&homeG&&parseInt(homeG)>parseInt(awayG)),hasScore:!!(awayG&&homeG),gameId,scoresheetUrl});
   });
   return result;
 }
 
-/* ══════════════════════════════════════════
-   PARSE LOCKER ROOM HTML
-   Cols: 0=GameID, 1=Date, 2=Time, 3=Rink,
-         4=League, 5=Home, 6=HomeLR,
-         7=Away, 8=AwayLR
-   ══════════════════════════════════════════ */
-function parseLockerRooms(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const map = {};
-  doc.querySelectorAll('table tr').forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length < 9) return;
-    const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
-    const id = c(0);
-    if (!id.match(/^\d+$/)) return;
-    map[id] = {
-      homeTeam: c(5), homeLR: c(6),
-      awayTeam: c(7), awayLR: c(8),
-    };
+function parseLR(html){
+  const doc=new DOMParser().parseFromString(html,'text/html'),map={};
+  doc.querySelectorAll('table tr').forEach(row=>{
+    const cells=row.querySelectorAll('td');
+    if(cells.length<9)return;
+    const c=i=>cells[i]?.textContent.replace(/\u00a0/g,' ').trim()??'';
+    const id=c(0);if(!id.match(/^\d+$/))return;
+    // Only store if it looks like a beer league game (league col contains SIAHL)
+    const league=c(4);
+    if(league&&league.includes('SIAHL')){
+      map[id]={homeLR:c(6),awayLR:c(8)};
+    }
   });
   return map;
 }
 
-/* ══════════════════════════════════════════
-   FETCH WITH PROXY FALLBACK
-   ══════════════════════════════════════════ */
-async function fetchWithFallback(url) {
-  for (const proxy of PROXIES) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-      const res = await fetch(proxy(url), { cache:'no-store', signal: controller.signal });
-      clearTimeout(timeout);
-      if (!res.ok) continue;
-      const text = await res.text();
-      if (text.includes('<table') || text.includes('<TABLE')) return text;
-    } catch {}
+async function fetchProxy(url){
+  for(const proxy of PROXIES){
+    try{
+      const ctrl=new AbortController();
+      const t=setTimeout(()=>ctrl.abort(),8000);
+      const res=await fetch(proxy(url),{cache:'no-store',signal:ctrl.signal});
+      clearTimeout(t);
+      if(!res.ok)continue;
+      const text=await res.text();
+      if(text.includes('<table')||text.includes('<TABLE'))return text;
+    }catch{}
   }
-  throw new Error('All proxies failed — check your connection.');
+  throw new Error('Could not reach schedule server. Check connection.');
 }
 
-/* ══════════════════════════════════════════
-   MAIN FETCH
-   ══════════════════════════════════════════ */
-async function doFetch() {
-  if (busy) {
-    // Force-unlock if somehow stuck
-    busy = false;
-  }
-  busy = true;
+async function doFetch(){
+  busy=false; // always unlock first
+  busy=true;
   setBtnSpin(true);
-  setStatus('Refreshing…');
+  setStatus('Loading…');
   clearTimers();
-
-  // Hard safety timeout — unlock UI after 30s no matter what
-  const safetyTimer = setTimeout(() => {
-    busy = false;
-    setBtnSpin(false);
-    setStatus('Timed out — tap Refresh');
-  }, 30000);
-
-  try {
-    const league = LEAGUES[curLeague];
-
-    // Fetch all schedule URLs for this league (HS has two), merge results
-    const allHtmls = await Promise.all(league.urls.map(u => fetchWithFallback(u)));
-    const allGames = allHtmls.flatMap(html => parseSchedule(html));
-
-    // Deduplicate by gameId (HS Saturday URL overlaps with weekday URL)
-    const seen = new Set();
-    games = allGames.filter(g => {
-      if (!g.gameId) return true;
-      if (seen.has(g.gameId)) return false;
-      seen.add(g.gameId); return true;
-    });
-
-    dates = [...new Set(games.map(g => g.date))].sort();
-
-    // Fetch locker rooms (beer league only, fire and forget)
-    locker = {};
-    if (league.lrUrl) {
-      fetchWithFallback(league.lrUrl)
-        .then(html => { locker = parseLockerRooms(html); renderContent(); })
-        .catch(() => {});
+  const safety=setTimeout(()=>{busy=false;setBtnSpin(false);setStatus('Timed out — tap Refresh');},25000);
+  try{
+    // Fetch schedule
+    const html=await fetchProxy(SCHED_URL);
+    games=parseSchedule(html);
+    dates=[...new Set(games.map(g=>g.date))].sort();
+    const today=todayISO();
+    if(!selDate||!dates.includes(selDate)){
+      selDate=dates.find(d=>d>=today)||dates[dates.length-1]||'';
     }
-
-    const today = todayISO();
-    if (!selDate || !dates.includes(selDate)) {
-      selDate = dates.find(d => d >= today) || dates[dates.length-1] || '';
-    }
-
     renderStrip();
     renderContent();
     startCountdown();
-  } catch(e) {
+    // Fetch locker rooms in background — won't block UI
+    fetchProxy(LR_URL).then(lrHtml=>{
+      locker=parseLR(lrHtml);
+      renderContent(); // re-render with LR data
+    }).catch(()=>{}); // silently ignore if LR fails
+  }catch(e){
     showError(e.message);
-    setStatus('Failed to load');
-  } finally {
-    clearTimeout(safetyTimer);
-    busy = false;
+    setStatus('Failed — tap Refresh');
+  }finally{
+    clearTimeout(safety);
+    busy=false;
     setBtnSpin(false);
   }
 }
 
-/* ══════════════════════════════════════════
-   LEAGUE SWITCH
-   ══════════════════════════════════════════ */
-function switchLeague(id) {
-  if (id === curLeague) return;
-  curLeague = id;
-  selDate = '';
-  document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
-  document.getElementById('ltab-' + id).classList.add('active');
-  document.getElementById('date-strip').innerHTML = '';
-  document.getElementById('content').innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"
+function clearTimers(){clearTimeout(refreshTO);clearInterval(cdInterval);}
+function startCountdown(){
+  cdSecs=REFRESH_MS/1000;updateStatus();
+  cdInterval=setInterval(()=>{cdSecs--;updateStatus();if(cdSecs<=0){clearInterval(cdInterval);doFetch();}},1000);
+  refreshTO=setTimeout(doFetch,REFRESH_MS);
+}
+function updateStatus(){
+  const now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const m=Math.floor(cdSecs/60),s=cdSecs%60;
+  setStatus('Updated '+now+' · refresh in <b>'+m+':'+String(s).padStart(2,'0')+'</b>');
+}
+function setStatus(h){document.getElementById('status').innerHTML=h;}
+function setBtnSpin(on){document.getElementById('rfbtn').classList.toggle('spin',on);}
+
+function renderStrip(){
+  const today=todayISO(),strip=document.getElementById('date-strip');
+  strip.innerHTML='';
+  dates.forEach(d=>{
+    const el=document.createElement('span');
+    el.className='dchip'+(d===selDate?' active':'')+(d===today?' today':'');
+    el.textContent=chipLabel(d);
+    el.onclick=()=>{selDate=d;renderStrip();renderContent();};
+    strip.appendChild(el);
+  });
+  strip.querySelector('.active')?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+}
+
+function renderContent(){
+  const el=document.getElementById('content');
+  const day=games.filter(g=>g.date===selDate);
+  if(!day.length){el.innerHTML='<div class="empty"><div class="ico">🍺</div><div class="msg">No games on<br>'+longLabel(selDate)+'</div></div>';return;}
+  const divMap={};
+  day.forEach(g=>{if(!divMap[g.division])divMap[g.division]=[];divMap[g.division].push(g);});
+  const divs=Object.keys(divMap).sort();
+  const icons=['🏅','🥇','🥈','🥉','🏆','⭐','🎖️','💎','🔵','🟢'];
+  let html='<div id="day-banner"><div class="dname">'+longLabel(selDate)+'</div><div id="day-stats"><div class="stat"><div class="v">'+day.length+'</div><div class="l">Games</div></div><div class="stat"><div class="v">'+divs.length+'</div><div class="l">Divs</div></div></div></div>';
+  divs.forEach((div,i)=>{
+    const dg=divMap[div],id='div'+i;
+    html+='<div class="div-card" id="'+id+'"><div class="div-hdr" onclick="toggleDiv(\''+id+'\')"><div class="div-left"><div class="div-icon">'+icons[i%icons.length]+'</div><span class="div-name">'+esc(div)+'</span><span class="div-badge">'+dg.length+'</span></div><span class="div-chev">▼</span></div><div class="div-body">';
+    dg.forEach(g=>{
+      const lr=g.gameId?locker[g.gameId]:null;
+      let lrHtml='';
+      if(lr){
+        if(lr.homeLR)lrHtml+='<span class="glr-home">🏠 '+esc(lr.homeLR)+'</span>';
+        if(lr.awayLR)lrHtml+='<span class="glr-away">✈️ '+esc(lr.awayLR)+'</span>';
+      }
+      const score=g.hasScore?'<div class="score-box"><div class="score-v">'+esc(g.awayG)+'–'+esc(g.homeG)+'</div><div class="score-l">Final</div></div>':'';
+      const hasLink=!!g.scoresheetUrl;
+      const tag=hasLink?'a href="'+esc(g.scoresheetUrl)+'" target="_blank" rel="noopener"':'div';
+      const ct=hasLink?'a':'div';
+      html+='<'+tag+' class="game-card'+(hasLink?'':' no-link')+'">'
+        +'<div class="game-top"><span class="gtime">'+esc(g.time)+'</span>'
+        +(g.rink?'<span class="grink">🏒 '+esc(g.rink)+'</span>':'')
+        +lrHtml
+        +(hasLink?'<span class="ss-hint">📋 Scoresheet ›</span>':'')
+        +'</div>'
+        +'<div class="game-matchup"><div class="teams">'
+        +'<span class="away'+(g.awayWins?' winner':'')+'">'+esc(g.away)+'</span>'
+        +'<span class="vs">vs</span>'
+        +'<span class="home'+(g.homeWins?' winner':'')+'">'+esc(g.home)+'</span>'
+        +'</div>'+score+'</div>'
+        +'</'+ct+'>';
+    });
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function showError(msg){document.getElementById('content').innerHTML='<div class="err-bar">⚠️ '+esc(msg)+'<small>Tap Refresh to try again.</small></div><div class="empty"><div class="ico">🍺</div><div class="msg">Could not load schedule.</div></div>';}
+function toggleDiv(id){document.getElementById(id)?.classList.toggle('closed');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+const hdr=document.getElementById('hdr');
+new ResizeObserver(()=>document.documentElement.style.setProperty('--hh',hdr.offsetHeight+'px')).observe(hdr);
+
+doFetch();
+
+// PWA install prompt
+let dp=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;if(!sessionStorage.getItem('iBd'))setTimeout(showBanner,3000);});
+window.addEventListener('appinstalled',hideBanner);
+function showBanner(){
+  if(document.getElementById('ib'))return;
+  const b=document.createElement('div');b.id='ib';
+  b.innerHTML='<div style="flex:1"><strong style="display:block;font-size:14px;margin-bottom:2px">Install Beer League</strong><span style="font-size:12px;opacity:.7">Add to home screen</span></div><button onclick="doInstall()" style="background:#ffb300;color:#000;border:none;border-radius:9px;padding:9px 15px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">Install</button><button onclick="hideBanner()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:20px;cursor:pointer;padding:4px 2px">✕</button>';
+  Object.assign(b.style,{position:'fixed',bottom:'0',left:'0',right:'0',zIndex:'999',display:'flex',alignItems:'center',gap:'12px',padding:'14px 16px',paddingBottom:'calc(14px + env(safe-area-inset-bottom,0px))',background:'linear-gradient(135deg,#3a1f00,#1a0e00)',borderTop:'1px solid rgba(255,179,0,.3)',color:'#fff',transform:'translateY(100%)',transition:'transform .3s ease'});
+  document.body.appendChild(b);
+  requestAnimationFrame(()=>requestAnimationFrame(()=
