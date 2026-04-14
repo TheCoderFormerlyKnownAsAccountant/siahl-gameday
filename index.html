@@ -171,19 +171,19 @@ function parseLR(html){
   return map;
 }
 
+function tOut(ms){return new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms));}
+async function tryOne(proxyUrl){
+  const res=await Promise.race([fetch(proxyUrl,{cache:'no-store'}),tOut(7000)]);
+  if(!res.ok)throw new Error('bad');
+  const text=await Promise.race([res.text(),tOut(7000)]);
+  if(text.includes('<table')||text.includes('<TABLE'))return text;
+  throw new Error('no table');
+}
 async function fetchProxy(url){
   for(const proxy of PROXIES){
-    try{
-      const ctrl=new AbortController();
-      const t=setTimeout(()=>ctrl.abort(),8000);
-      const res=await fetch(proxy(url),{cache:'no-store',signal:ctrl.signal});
-      clearTimeout(t);
-      if(!res.ok)continue;
-      const text=await res.text();
-      if(text.includes('<table')||text.includes('<TABLE'))return text;
-    }catch{}
+    try{return await tryOne(proxy(url));}catch(e){}
   }
-  throw new Error('Could not reach schedule server. Check connection.');
+  throw new Error('All proxies failed. Check connection and tap Refresh.');
 }
 
 async function doFetch(){
@@ -192,7 +192,7 @@ async function doFetch(){
   setBtnSpin(true);
   setStatus('Loading…');
   clearTimers();
-  const safety=setTimeout(()=>{busy=false;setBtnSpin(false);setStatus('Timed out — tap Refresh');},25000);
+  const safety=setTimeout(()=>{busy=false;setBtnSpin(false);setStatus('Timed out — tap Refresh');},20000);
   try{
     // Fetch schedule
     const html=await fetchProxy(SCHED_URL);
@@ -307,4 +307,10 @@ function showBanner(){
   b.innerHTML='<div style="flex:1"><strong style="display:block;font-size:14px;margin-bottom:2px">Install Beer League</strong><span style="font-size:12px;opacity:.7">Add to home screen</span></div><button onclick="doInstall()" style="background:#ffb300;color:#000;border:none;border-radius:9px;padding:9px 15px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">Install</button><button onclick="hideBanner()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:20px;cursor:pointer;padding:4px 2px">✕</button>';
   Object.assign(b.style,{position:'fixed',bottom:'0',left:'0',right:'0',zIndex:'999',display:'flex',alignItems:'center',gap:'12px',padding:'14px 16px',paddingBottom:'calc(14px + env(safe-area-inset-bottom,0px))',background:'linear-gradient(135deg,#3a1f00,#1a0e00)',borderTop:'1px solid rgba(255,179,0,.3)',color:'#fff',transform:'translateY(100%)',transition:'transform .3s ease'});
   document.body.appendChild(b);
-  requestAnimationFrame(()=>requestAnimationFrame(()=
+  requestAnimationFrame(()=>requestAnimationFrame(()=>b.style.transform='translateY(0)'));
+}
+function hideBanner(){sessionStorage.setItem('iBd','1');const b=document.getElementById('ib');if(b){b.style.transform='translateY(100%)';setTimeout(()=>b.remove(),350);}}
+function doInstall(){hideBanner();if(dp){dp.prompt();dp.userChoice.then(()=>dp=null);}else alert('Tap Share then "Add to Home Screen"');}
+</script>
+</body>
+</html>
