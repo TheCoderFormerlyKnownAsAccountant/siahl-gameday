@@ -3,260 +3,181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#051523" />
+  <meta name="theme-color" content="#04121e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SIAHL Game Day" />
   <title>Sharks Ice · SIAHL Game Day Viewer</title>
 
-  <!-- PWA: inline manifest via blob so no server needed -->
   <script>
     const _manifest = {
       name: "Sharks Ice · SIAHL Game Day Viewer",
       short_name: "SIAHL Game Day",
       description: "Live SIAHL game schedule viewer — current season only",
-      start_url: ".",
-      display: "standalone",
-      orientation: "portrait",
-      background_color: "#04121e",
-      theme_color: "#04121e",
+      start_url: ".", display: "standalone", orientation: "portrait",
+      background_color: "#04121e", theme_color: "#04121e",
       icons: [
-        {
-          src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%2304121e'/%3E%3Ccircle cx='96' cy='96' r='78' fill='%23071c2c'/%3E%3Ctext x='96' y='128' text-anchor='middle' font-size='88' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E",
-          sizes: "192x192", type: "image/svg+xml", purpose: "any maskable"
-        },
-        {
-          src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%2304121e'/%3E%3Ccircle cx='256' cy='256' r='210' fill='%23071c2c'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='240' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E",
-          sizes: "512x512", type: "image/svg+xml", purpose: "any maskable"
-        }
+        { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%2304121e'/%3E%3Ccircle cx='96' cy='96' r='78' fill='%23071c2c'/%3E%3Ctext x='96' y='128' text-anchor='middle' font-size='88' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
+        { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%2304121e'/%3E%3Ccircle cx='256' cy='256' r='210' fill='%23071c2c'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='240' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
       ]
     };
-    // Inject manifest link after DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       const blob = new Blob([JSON.stringify(_manifest)], { type: 'application/manifest+json' });
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = URL.createObjectURL(blob);
+      const link = document.createElement('link'); link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
       document.head.appendChild(link);
     });
   </script>
-
-  <!-- Apple touch icon (inline SVG data URI) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%2304121e'/%3E%3Ccircle cx='90' cy='90' r='74' fill='%23071c2c'/%3E%3Ctext x='90' y='120' text-anchor='middle' font-size='82' font-family='system-ui'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --bg:       #04121e;
-      --bg2:      #071c2c;
-      --surface:  rgba(255,255,255,0.035);
-      --surface2: rgba(255,255,255,0.065);
-      --border:   rgba(255,255,255,0.07);
-      --teal:     #00bcd4;
-      --cyan:     #00e5ff;
-      --dim:      rgba(0,188,212,0.15);
-      --text:     #ddeef5;
-      --muted:    rgba(221,238,245,0.45);
-      --faint:    rgba(221,238,245,0.22);
-      --gold:     #ffb300;
-      --green:    #26a69a;
+      --bg:      #04121e;
+      --surface: rgba(255,255,255,0.035);
+      --border:  rgba(255,255,255,0.07);
+      --teal:    #00bcd4;
+      --cyan:    #00e5ff;
+      --dim:     rgba(0,188,212,0.15);
+      --text:    #ddeef5;
+      --muted:   rgba(221,238,245,0.45);
+      --faint:   rgba(221,238,245,0.22);
+      --gold:    #ffb300;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html, body { height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
     body::before {
-      content: '';
-      position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background:
-        radial-gradient(ellipse 70% 40% at 15% 5%, rgba(0,90,140,0.2) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 35% at 85% 85%, rgba(0,50,90,0.13) 0%, transparent 60%);
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background: radial-gradient(ellipse 70% 40% at 15% 5%, rgba(0,90,140,0.2) 0%, transparent 65%),
+                  radial-gradient(ellipse 50% 35% at 85% 85%, rgba(0,50,90,0.13) 0%, transparent 60%);
     }
 
     /* ── HEADER ── */
     #hdr {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(4,18,30,0.9);
-      backdrop-filter: blur(18px) saturate(1.5);
-      -webkit-backdrop-filter: blur(18px) saturate(1.5);
-      border-bottom: 1px solid rgba(0,188,212,0.18);
-      padding-top: env(safe-area-inset-top, 0px);
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      background:rgba(4,18,30,0.92);
+      backdrop-filter:blur(18px) saturate(1.5);
+      -webkit-backdrop-filter:blur(18px) saturate(1.5);
+      border-bottom:1px solid rgba(0,188,212,0.18);
+      padding-top:env(safe-area-inset-top,0px);
     }
-
-    #hdr-top {
-      display: flex; align-items: center; gap: 11px;
-      padding: 13px 16px 9px;
-    }
+    #hdr-top { display:flex; align-items:center; gap:11px; padding:12px 16px 8px; }
     #logo {
-      width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
-      background: linear-gradient(135deg, #005f7a, #002535);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 21px;
-      box-shadow: 0 0 16px rgba(0,188,212,0.25);
+      width:38px; height:38px; border-radius:11px; flex-shrink:0;
+      background:linear-gradient(135deg,#005f7a,#002535);
+      display:flex; align-items:center; justify-content:center; font-size:21px;
+      box-shadow:0 0 16px rgba(0,188,212,0.25);
     }
-    #app-name {
-      flex: 1;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 19px; font-weight: 700; letter-spacing: 1px;
-      color: #fff; line-height: 1;
-    }
-    #app-sub {
-      font-size: 10px; color: var(--muted); letter-spacing: 0.2px;
-      margin-top: 2px; font-weight: 400;
-    }
-    #season-note { color: var(--teal); opacity: .8; }
-    #status {
-      font-size: 10.5px; color: var(--faint); letter-spacing: 0.3px;
-      margin-top: 2px; font-weight: 400;
-    }
-    #status b { color: var(--teal); font-weight: 600; }
-
+    #app-name { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; letter-spacing:1px; color:#fff; line-height:1; }
+    #app-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+    #app-sub span { color:var(--teal); opacity:.8; }
+    #status { font-size:10px; color:var(--faint); margin-top:1px; }
+    #status b { color:var(--teal); }
     #rfbtn {
-      background: var(--dim); border: 1px solid rgba(0,188,212,0.28);
-      color: var(--teal); border-radius: 9px; padding: 6px 12px;
-      font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif;
-      cursor: pointer; display: flex; align-items: center; gap: 5px;
-      transition: opacity .15s;
+      background:var(--dim); border:1px solid rgba(0,188,212,0.28); color:var(--teal);
+      border-radius:9px; padding:6px 11px; font-size:12px; font-weight:600;
+      font-family:'DM Sans',sans-serif; cursor:pointer; display:flex; align-items:center; gap:4px;
     }
-    #rfbtn:active { opacity: .65; }
-    #rfbtn.spin .ico { display: inline-block; animation: spin .7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    #rfbtn:active { opacity:.6; }
+    #rfbtn.spin .ico { display:inline-block; animation:spin .7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── LEAGUE SELECTOR ── */
+    #league-row { display:flex; gap:7px; padding:0 14px 9px; }
+    .ltab {
+      flex:1; padding:7px 4px; border-radius:10px; border:1px solid var(--border);
+      background:var(--surface); color:var(--muted); font-size:12px; font-weight:600;
+      font-family:'DM Sans',sans-serif; cursor:pointer; text-align:center; transition:all .15s;
+    }
+    .ltab.active {
+      border-color:var(--teal); background:rgba(0,188,212,0.18);
+      color:var(--cyan); box-shadow:0 0 10px rgba(0,188,212,0.15);
+    }
+    .ltab:active { opacity:.7; }
 
     /* ── DATE STRIP ── */
-    #date-scroll {
-      overflow-x: auto; white-space: nowrap;
-      padding: 0 14px 11px;
-      scrollbar-width: none;
-    }
-    #date-scroll::-webkit-scrollbar { display: none; }
+    #date-scroll { overflow-x:auto; white-space:nowrap; padding:0 14px 11px; scrollbar-width:none; }
+    #date-scroll::-webkit-scrollbar { display:none; }
     .dchip {
-      display: inline-block;
-      padding: 6px 13px; border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--muted); font-size: 12px; font-weight: 500;
-      cursor: pointer; user-select: none;
-      transition: all .15s; margin-right: 6px;
+      display:inline-block; padding:6px 13px; border-radius:20px;
+      border:1px solid var(--border); background:var(--surface);
+      color:var(--muted); font-size:12px; font-weight:500;
+      cursor:pointer; user-select:none; transition:all .15s; margin-right:6px;
     }
-    .dchip:last-child { margin-right: 0; }
-    .dchip.active {
-      border-color: var(--teal);
-      background: rgba(0,188,212,0.18);
-      color: var(--cyan); font-weight: 700;
-      box-shadow: 0 0 10px rgba(0,188,212,0.18);
-    }
-    .dchip.today::after { content: ' ·'; color: var(--gold); }
+    .dchip.active { border-color:var(--teal); background:rgba(0,188,212,0.18); color:var(--cyan); font-weight:700; }
+    .dchip.today::after { content:' ·'; color:var(--gold); }
 
     /* ── MAIN ── */
-    #main {
-      position: relative; z-index: 1;
-      padding: 0 13px 48px;
-      padding-top: calc(var(--hh, 118px) + 14px);
-    }
+    #main { position:relative; z-index:1; padding:0 13px 56px; padding-top:calc(var(--hh,140px) + 14px); }
 
     /* ── DAY BANNER ── */
     #day-banner {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; border-radius: 12px;
-      background: var(--surface); border: 1px solid var(--border);
-      margin-bottom: 14px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px; border-radius:12px;
+      background:var(--surface); border:1px solid var(--border); margin-bottom:14px;
     }
     #day-banner .dname { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; color:#fff; }
     #day-stats { display:flex; gap:16px; }
-    .stat { text-align:center; }
     .stat .v { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color:var(--cyan); line-height:1; }
     .stat .l { font-size:9px; color:var(--faint); text-transform:uppercase; letter-spacing:.7px; }
 
     /* ── DIVISION CARD ── */
-    .div-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 15px; margin-bottom: 12px;
-      overflow: hidden;
-      animation: rise .25s ease both;
-    }
+    .div-card { background:var(--surface); border:1px solid var(--border); border-radius:15px; margin-bottom:12px; overflow:hidden; animation:rise .25s ease both; }
     @keyframes rise { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-
-    .div-hdr {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 15px; cursor: pointer; user-select: none;
-      background: rgba(255,255,255,0.025);
-      border-bottom: 1px solid var(--border);
-    }
-    .div-hdr:active { background: rgba(255,255,255,0.045); }
-    .div-left { display: flex; align-items: center; gap: 10px; }
-    .div-icon {
-      width: 29px; height: 29px; border-radius: 8px; flex-shrink: 0;
-      background: linear-gradient(135deg, rgba(0,188,212,0.2), rgba(0,96,100,0.2));
-      border: 1px solid rgba(0,188,212,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
-    }
+    .div-hdr { display:flex; align-items:center; justify-content:space-between; padding:13px 15px; cursor:pointer; user-select:none; background:rgba(255,255,255,0.025); border-bottom:1px solid var(--border); }
+    .div-hdr:active { background:rgba(255,255,255,0.045); }
+    .div-left { display:flex; align-items:center; gap:10px; }
+    .div-icon { width:29px; height:29px; border-radius:8px; flex-shrink:0; background:linear-gradient(135deg,rgba(0,188,212,0.2),rgba(0,96,100,0.2)); border:1px solid rgba(0,188,212,0.2); display:flex; align-items:center; justify-content:center; font-size:14px; }
     .div-name { font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:.6px; color:#fff; }
-    .div-badge {
-      background: rgba(255,255,255,0.07); color: var(--muted);
-      font-size:11px; border-radius:10px; padding:1px 7px;
-    }
+    .div-badge { background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; border-radius:10px; padding:1px 7px; }
     .div-chev { color:var(--faint); font-size:11px; transition:transform .2s; }
-    .div-card.closed .div-chev { transform: rotate(-90deg); }
+    .div-card.closed .div-chev { transform:rotate(-90deg); }
     .div-card.closed .div-body { display:none; }
-
-    .div-body { padding: 11px 13px; }
+    .div-body { padding:11px 13px; }
 
     /* ── GAME CARD ── */
     .game-card {
-      background: rgba(255,255,255,0.028);
-      border: 1px solid rgba(255,255,255,0.055);
-      border-radius: 10px; padding: 11px 12px;
-      margin-bottom: 8px;
+      background:rgba(255,255,255,0.028); border:1px solid rgba(255,255,255,0.055);
+      border-radius:10px; padding:11px 12px; margin-bottom:8px;
+      cursor:pointer; transition:border-color .15s, background .15s;
+      text-decoration:none; display:block; color:inherit;
     }
-    .game-card:last-child { margin-bottom: 0; }
-    .game-card:active { border-color: rgba(0,188,212,0.2); }
+    .game-card:last-child { margin-bottom:0; }
+    .game-card:active { border-color:rgba(0,188,212,0.35); background:rgba(0,188,212,0.06); }
+    .game-card.no-link { cursor:default; }
 
-    .game-top {
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 7px;
+    .game-top { display:flex; align-items:center; gap:7px; margin-bottom:7px; flex-wrap:wrap; }
+    .gtime { background:var(--dim); color:var(--teal); font-size:11px; font-weight:700; letter-spacing:.7px; padding:2px 9px; border-radius:20px; font-family:'Rajdhani',sans-serif; white-space:nowrap; }
+    .grink { color:var(--faint); font-size:11px; }
+    .glr-home, .glr-away {
+      font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px;
+      font-family:'Rajdhani',sans-serif; letter-spacing:.5px; white-space:nowrap;
     }
-    .gtime {
-      background: var(--dim); color: var(--teal);
-      font-size: 11px; font-weight: 700; letter-spacing: .7px;
-      padding: 2px 9px; border-radius: 20px;
-      font-family: 'Rajdhani', sans-serif;
-    }
-    .grink { color: var(--faint); font-size: 11px; }
+    .glr-home { background:rgba(0,188,212,0.18); color:var(--cyan); }
+    .glr-away { background:rgba(255,179,0,0.15); color:var(--gold); }
+    .scoresheet-hint { font-size:10px; color:var(--faint); margin-left:auto; }
+    .game-card:not(.no-link) .scoresheet-hint { color:rgba(0,188,212,0.5); }
 
-    .game-matchup {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    }
-    .teams { flex: 1; font-size: 13.5px; font-weight: 500; line-height: 1.5; color: var(--text); }
-    .teams .away { color: #d4edf5; }
-    .teams .vs { color: var(--faint); font-size: 11px; font-weight: 400; margin: 0 5px; }
-    .teams .home { color: #c2e8f0; }
-    .winner { font-weight: 700; color: #fff !important; }
-
-    .score-box {
-      background: linear-gradient(135deg, rgba(0,188,212,0.16), rgba(0,140,120,0.16));
-      border: 1px solid rgba(0,188,212,0.25);
-      border-radius: 8px; padding: 5px 10px;
-      text-align: center; min-width: 52px; flex-shrink: 0;
-    }
+    .game-matchup { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .teams { flex:1; font-size:13.5px; font-weight:500; line-height:1.5; }
+    .teams .away { color:#d4edf5; }
+    .teams .vs { color:var(--faint); font-size:11px; font-weight:400; margin:0 5px; }
+    .teams .home { color:#c2e8f0; }
+    .winner { font-weight:700; color:#fff !important; }
+    .score-box { background:linear-gradient(135deg,rgba(0,188,212,0.16),rgba(0,140,120,0.16)); border:1px solid rgba(0,188,212,0.25); border-radius:8px; padding:5px 10px; text-align:center; min-width:52px; flex-shrink:0; }
     .score-v { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:800; color:var(--cyan); line-height:1; }
     .score-l { font-size:8px; color:var(--faint); text-transform:uppercase; letter-spacing:1px; }
 
-    /* ── EMPTY / ERROR / LOADING ── */
+    /* ── STATES ── */
     .empty { text-align:center; padding:70px 20px; color:var(--faint); }
     .empty .ico { font-size:44px; margin-bottom:14px; }
     .empty .msg { font-size:14px; line-height:1.55; }
-    .err-bar {
-      background: rgba(239,83,80,.09); border: 1px solid rgba(239,83,80,.28);
-      color: #ef9a9a; border-radius:12px; padding:13px 15px; margin-bottom:14px;
-      font-size:13px; line-height:1.5;
-    }
+    .err-bar { background:rgba(239,83,80,.09); border:1px solid rgba(239,83,80,.28); color:#ef9a9a; border-radius:12px; padding:13px 15px; margin-bottom:14px; font-size:13px; line-height:1.5; }
     .err-bar small { display:block; opacity:.65; margin-top:3px; font-size:11px; }
     .dots { display:flex; justify-content:center; align-items:center; gap:7px; padding:60px 0; }
     .dot { width:8px; height:8px; border-radius:50%; background:var(--teal); animation:pulse 1.2s ease-in-out infinite; }
     .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-    @keyframes pulse{ 0%,80%,100%{transform:scale(.55);opacity:.25} 40%{transform:scale(1);opacity:1} }
+    @keyframes pulse{0%,80%,100%{transform:scale(.55);opacity:.25}40%{transform:scale(1);opacity:1}}
   </style>
 </head>
 <body>
@@ -266,14 +187,16 @@
     <div id="logo">🦈</div>
     <div style="flex:1">
       <div id="app-name">SHARKS ICE</div>
-      <div id="app-sub">SIAHL Game Day Viewer &nbsp;·&nbsp; <span id="season-note">Current season only</span></div>
-      <div id="status">Loading schedule…</div>
+      <div id="app-sub">SIAHL Game Day Viewer &nbsp;·&nbsp; <span>Current season only</span></div>
+      <div id="status">Loading…</div>
     </div>
-    <button id="rfbtn" onclick="doFetch()">
-      <span class="ico">↻</span> Refresh
-    </button>
+    <button id="rfbtn" onclick="doFetch()"><span class="ico">↻</span> Refresh</button>
   </div>
-  <div id="date-scroll"><div id="date-strip"><!-- chips --></div></div>
+  <div id="league-row">
+    <button class="ltab active" id="ltab-beer" onclick="switchLeague('beer')">🍺 Beer League</button>
+    <button class="ltab" id="ltab-hs" onclick="switchLeague('hs')">🏒 High School</button>
+  </div>
+  <div id="date-scroll"><div id="date-strip"></div></div>
 </div>
 
 <div id="main">
@@ -283,8 +206,22 @@
 </div>
 
 <script>
-/* ── CONFIG ── */
-const URL_TARGET = 'https://stats.sharksice.timetoscore.com/display-schedule.php?stat_class=1&league=1&season=74';
+const BASE = 'https://stats.sharksice.timetoscore.com';
+const LEAGUES = {
+  beer: {
+    label: 'Beer League',
+    urls: [`${BASE}/display-schedule.php?stat_class=1&league=1&season=74`],
+    lrUrl: `${BASE}/display-lr-assignments.php`,
+  },
+  hs: {
+    label: 'High School',
+    urls: [
+      `${BASE}/display-schedule.php?stat_class=1&league=7&season=73`,
+      `${BASE}/display-schedule.php?stat_class=1&league=7&level=182&conf=0&season=73`,
+    ],
+    lrUrl: null,
+  },
+};
 const PROXIES = [
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
@@ -292,30 +229,22 @@ const PROXIES = [
 ];
 const REFRESH_MS = 5 * 60 * 1000;
 
-/* ── STATE ── */
+let curLeague = 'beer';
 let games = [], dates = [], selDate = '';
-let refreshTO = null, cdInterval = null, cdSecs = REFRESH_MS/1000;
+let locker = {};
+let refreshTO = null, cdInterval = null, cdSecs = REFRESH_MS / 1000;
 let busy = false;
 
-/* ── DATE HELPERS ── */
-// Parse "Mon Apr 13" style date strings safely — no new Date(string) to avoid timezone bugs
 const MONTHS = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
-const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS_LONG = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MLONG  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function parseRawDate(raw) {
-  // e.g. "Mon Apr 13" or "Sat Apr 11"
   const parts = raw.trim().split(/\s+/);
   if (parts.length < 3) return null;
-  const mon = MONTHS[parts[1]];
-  const day = parseInt(parts[2], 10);
+  const mon = MONTHS[parts[1]], day = parseInt(parts[2], 10);
   if (!mon || isNaN(day)) return null;
-  // Guess year: if month/day is before Jan 1 of current year logic, default to 2025/2026
-  // Use current year; if date already passed by a lot, try next. Simple: use 2025 for season 74.
-  // Actually just use the current year and next year heuristic:
   const now = new Date();
   let year = now.getFullYear();
-  // If month is earlier than current month by >6, bump year
   if (mon < now.getMonth() + 1 - 6) year++;
   return `${year}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 }
@@ -327,72 +256,69 @@ function todayISO() {
 
 function chipLabel(iso) {
   const [y,m,d] = iso.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()];
-  return `${dow} ${MONTHS_LONG[m-1]} ${d}`;
+  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(y,m-1,d).getDay()];
+  return `${dow} ${MLONG[m-1]} ${d}`;
 }
 
 function longLabel(iso) {
   const [y,m,d] = iso.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  return dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 }
 
-/* ── PARSE HTML ── */
-/*
-  Columns: Game | Date | Time | Rink | League | Level(Division) | Away | Away Goals | Home | Home Goals | Type | Scoresheet | GC
-  Indices:  0     1      2      3      4        5                 6      7            8      9            10     11           12
-*/
-function parseHTML(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+function parseSchedule(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
   const result = [];
-
   doc.querySelectorAll('table tr').forEach(row => {
     const cells = row.querySelectorAll('td');
     if (cells.length < 10) return;
     const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
-
     const rawDate = c(1);
-    if (!rawDate.match(/[A-Z][a-z]+ [A-Z][a-z]+ \d+/)) return; // skip header/non-date rows
-
+    if (!rawDate.match(/[A-Z][a-z]+ [A-Z][a-z]+ \d+/)) return;
     const iso = parseRawDate(rawDate);
     if (!iso) return;
-
-    const awayGoals = c(7);
-    const homeGoals = c(9);
-    const awayWins = awayGoals && homeGoals && parseInt(awayGoals) > parseInt(homeGoals);
-    const homeWins = awayGoals && homeGoals && parseInt(homeGoals) > parseInt(awayGoals);
-
+    const rawId = cells[0]?.textContent.replace(/\u00a0/g,' ').trim().replace('*','') ?? '';
+    const gameId = rawId.match(/^\d+$/) ? rawId : null;
+    const ssLink = cells[0]?.querySelector('a[href*="oss-scoresheet"]');
+    const scoresheetUrl = ssLink ? `${BASE}/${ssLink.getAttribute('href')}` : null;
+    const awayG = c(7), homeG = c(9);
     result.push({
-      date:      iso,
-      time:      c(2),
-      rink:      c(3).replace(/San Jose\s*/i, '').trim(),
-      division:  c(5) || 'Unknown Division',
-      away:      c(6),
-      awayG:     awayGoals,
-      home:      c(8),
-      homeG:     homeGoals,
-      awayWins,
-      homeWins,
-      hasScore:  !!(awayGoals && homeGoals),
+      date: iso, time: c(2),
+      rink: c(3).replace(/San Jose\s*/i,'').trim(),
+      division: c(5) || 'Unknown Division',
+      away: c(6), awayG, home: c(8), homeG,
+      awayWins: !!(awayG && homeG && parseInt(awayG) > parseInt(homeG)),
+      homeWins: !!(awayG && homeG && parseInt(homeG) > parseInt(awayG)),
+      hasScore: !!(awayG && homeG),
+      gameId, scoresheetUrl,
     });
   });
-
   return result;
 }
 
-/* ── FETCH ── */
-async function fetchWithFallback() {
+function parseLockerRooms(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const map = {};
+  doc.querySelectorAll('table tr').forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 9) return;
+    const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
+    const id = c(0);
+    if (!id.match(/^\d+$/)) return;
+    map[id] = { homeTeam: c(5), homeLR: c(6), awayTeam: c(7), awayLR: c(8) };
+  });
+  return map;
+}
+
+async function fetchWithFallback(url) {
   for (const proxy of PROXIES) {
     try {
-      const res = await fetch(proxy(URL_TARGET), { cache: 'no-store' });
+      const res = await fetch(proxy(url), { cache:'no-store' });
       if (!res.ok) continue;
       const text = await res.text();
       if (text.includes('<table') || text.includes('<TABLE')) return text;
     } catch {}
   }
-  throw new Error('All proxies unreachable. Check your connection and try again.');
+  throw new Error('All proxies failed — check your connection.');
 }
 
 async function doFetch() {
@@ -401,22 +327,31 @@ async function doFetch() {
   setBtnSpin(true);
   setStatus('Refreshing…');
   clearTimers();
-
   try {
-    const html = await fetchWithFallback();
-    games = parseHTML(html);
+    const league = LEAGUES[curLeague];
+    const allHtmls = await Promise.all(league.urls.map(u => fetchWithFallback(u)));
+    const allGames = allHtmls.flatMap(html => parseSchedule(html));
+    const seen = new Set();
+    games = allGames.filter(g => {
+      if (!g.gameId) return true;
+      if (seen.has(g.gameId)) return false;
+      seen.add(g.gameId); return true;
+    });
     dates = [...new Set(games.map(g => g.date))].sort();
-
-    // Pick default date
+    locker = {};
+    if (league.lrUrl) {
+      fetchWithFallback(league.lrUrl)
+        .then(html => { locker = parseLockerRooms(html); renderContent(); })
+        .catch(() => {});
+    }
     const today = todayISO();
     if (!selDate || !dates.includes(selDate)) {
-      selDate = dates.find(d => d >= today) || dates[dates.length - 1] || '';
+      selDate = dates.find(d => d >= today) || dates[dates.length-1] || '';
     }
-
     renderStrip();
     renderContent();
     startCountdown();
-  } catch (e) {
+  } catch(e) {
     showError(e.message);
     setStatus('Failed to load');
   } finally {
@@ -425,254 +360,60 @@ async function doFetch() {
   }
 }
 
-/* ── TIMERS ── */
-function clearTimers() {
-  clearTimeout(refreshTO);
-  clearInterval(cdInterval);
+function switchLeague(id) {
+  if (id === curLeague) return;
+  curLeague = id;
+  selDate = '';
+  document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ltab-' + id).classList.add('active');
+  document.getElementById('date-strip').innerHTML = '';
+  document.getElementById('content').innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  doFetch();
 }
+
+function clearTimers() { clearTimeout(refreshTO); clearInterval(cdInterval); }
 function startCountdown() {
   cdSecs = REFRESH_MS / 1000;
   updateStatus();
-  cdInterval = setInterval(() => {
-    cdSecs--;
-    updateStatus();
-    if (cdSecs <= 0) { clearInterval(cdInterval); doFetch(); }
-  }, 1000);
+  cdInterval = setInterval(() => { cdSecs--; updateStatus(); if (cdSecs <= 0) { clearInterval(cdInterval); doFetch(); } }, 1000);
   refreshTO = setTimeout(doFetch, REFRESH_MS);
 }
 function updateStatus() {
-  const now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  const m = Math.floor(cdSecs/60), s = cdSecs % 60;
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const m = Math.floor(cdSecs/60), s = cdSecs%60;
   setStatus(`Updated ${now} · refresh in <b>${m}:${String(s).padStart(2,'0')}</b>`);
 }
 function setStatus(html) { document.getElementById('status').innerHTML = html; }
 function setBtnSpin(on) { document.getElementById('rfbtn').classList.toggle('spin', on); }
 
-/* ── RENDER STRIP ── */
 function renderStrip() {
   const today = todayISO();
   const strip = document.getElementById('date-strip');
   strip.innerHTML = '';
   dates.forEach(d => {
     const el = document.createElement('span');
-    el.className = 'dchip' + (d === selDate ? ' active' : '') + (d === today ? ' today' : '');
+    el.className = 'dchip' + (d===selDate?' active':'') + (d===today?' today':'');
     el.textContent = chipLabel(d);
     el.onclick = () => { selDate = d; renderStrip(); renderContent(); };
     strip.appendChild(el);
   });
-  // Scroll active into view
-  strip.querySelector('.active')?.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  strip.querySelector('.active')?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
 }
 
-/* ── RENDER CONTENT ── */
 function renderContent() {
   const el = document.getElementById('content');
   const day = games.filter(g => g.date === selDate);
-
   if (!day.length) {
-    el.innerHTML = `<div class="empty"><div class="ico">🏒</div><div class="msg">No games scheduled<br>for ${longLabel(selDate) || selDate}</div></div>`;
+    el.innerHTML = `<div class="empty"><div class="ico">🏒</div><div class="msg">No games scheduled<br>for ${longLabel(selDate)||selDate}</div></div>`;
     return;
   }
-
-  // Group by division
   const divMap = {};
-  day.forEach(g => {
-    if (!divMap[g.division]) divMap[g.division] = [];
-    divMap[g.division].push(g);
-  });
-
+  day.forEach(g => { if (!divMap[g.division]) divMap[g.division]=[]; divMap[g.division].push(g); });
   const divs = Object.keys(divMap).sort();
   const icons = ['🏅','🥇','🥈','🥉','🏆','⭐','🎖️','💎','🔵','🟢'];
-
   let html = `
     <div id="day-banner">
       <div class="dname">${longLabel(selDate)}</div>
       <div id="day-stats">
         <div class="stat"><div class="v">${day.length}</div><div class="l">Games</div></div>
-        <div class="stat"><div class="v">${divs.length}</div><div class="l">Divs</div></div>
-      </div>
-    </div>`;
-
-  divs.forEach((div, i) => {
-    const dg = divMap[div];
-    const id = 'div' + i;
-    html += `
-      <div class="div-card" id="${id}">
-        <div class="div-hdr" onclick="toggleDiv('${id}')">
-          <div class="div-left">
-            <div class="div-icon">${icons[i % icons.length]}</div>
-            <span class="div-name">${esc(div)}</span>
-            <span class="div-badge">${dg.length}</span>
-          </div>
-          <span class="div-chev">▼</span>
-        </div>
-        <div class="div-body">`;
-
-    dg.forEach(g => {
-      const awC = g.awayWins ? ' winner' : '';
-      const hmC = g.homeWins ? ' winner' : '';
-      const rinkLabel = g.rink ? `<span class="grink">🏒 ${esc(g.rink)}</span>` : '';
-      const scoreBlock = g.hasScore ? `
-        <div class="score-box">
-          <div class="score-v">${esc(g.awayG)}–${esc(g.homeG)}</div>
-          <div class="score-l">Final</div>
-        </div>` : '';
-
-      html += `
-        <div class="game-card">
-          <div class="game-top">
-            <span class="gtime">${esc(g.time)}</span>
-            ${rinkLabel}
-          </div>
-          <div class="game-matchup">
-            <div class="teams">
-              <span class="away${awC}">${esc(g.away)}</span>
-              <span class="vs">vs</span>
-              <span class="home${hmC}">${esc(g.home)}</span>
-            </div>
-            ${scoreBlock}
-          </div>
-        </div>`;
-    });
-
-    html += `</div></div>`;
-  });
-
-  el.innerHTML = html;
-}
-
-function showError(msg) {
-  document.getElementById('content').innerHTML = `
-    <div class="err-bar">⚠️ ${esc(msg)}<small>The schedule site may be temporarily unavailable. Tap Refresh to try again.</small></div>
-    <div class="empty"><div class="ico">🦈</div><div class="msg">Could not load schedule.</div></div>`;
-}
-
-/* ── TOGGLE ── */
-function toggleDiv(id) { document.getElementById(id)?.classList.toggle('closed'); }
-
-/* ── UTIL ── */
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ── HEADER HEIGHT TRACKING ── */
-const hdr = document.getElementById('hdr');
-new ResizeObserver(() => {
-  document.documentElement.style.setProperty('--hh', hdr.offsetHeight + 'px');
-}).observe(hdr);
-
-/* ── BOOT ── */
-doFetch();
-
-/* ══════════════════════════════════════════
-   PWA: SERVICE WORKER (inline via blob URL)
-   Caches the app shell so it loads offline.
-   ══════════════════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  const SW = `
-    const CACHE = 'sharks-ice-v2';
-    const SHELL = []; // dynamic app — nothing to pre-cache
-
-    self.addEventListener('install', e => {
-      self.skipWaiting();
-    });
-
-    self.addEventListener('activate', e => {
-      e.waitUntil(
-        caches.keys().then(keys =>
-          Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-        )
-      );
-      self.clients.claim();
-    });
-
-    self.addEventListener('fetch', e => {
-      const url = e.request.url;
-      // Don't intercept proxy/API calls — always fresh
-      if (url.includes('allorigins') || url.includes('corsproxy') || url.includes('thingproxy')) return;
-      // For the app shell (fonts, same-origin), try network first, fall back to cache
-      e.respondWith(
-        fetch(e.request)
-          .then(res => {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(e.request, clone));
-            return res;
-          })
-          .catch(() => caches.match(e.request))
-      );
-    });
-  `;
-  const swBlob = new Blob([SW], { type: 'application/javascript' });
-  const swURL  = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swURL).catch(() => {});
-}
-
-/* ══════════════════════════════════════════
-   PWA: INSTALL PROMPT (Android Chrome)
-   Shows a bottom banner after 3 seconds
-   offering to add to home screen.
-   ══════════════════════════════════════════ */
-let deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  if (!sessionStorage.getItem('installDismissed')) {
-    setTimeout(showInstallBanner, 3000);
-  }
-});
-
-window.addEventListener('appinstalled', () => {
-  hideInstallBanner();
-});
-
-function showInstallBanner() {
-  if (document.getElementById('install-banner')) return;
-  const banner = document.createElement('div');
-  banner.id = 'install-banner';
-  banner.innerHTML = `
-    <div style="flex:1">
-      <strong style="display:block;font-size:14px;margin-bottom:2px">Install SIAHL Game Day</strong>
-      <span style="font-size:12px;opacity:.7">Add to home screen for quick access</span>
-    </div>
-    <button onclick="triggerInstall()" style="
-      background:#00bcd4;color:#000;border:none;border-radius:9px;
-      padding:9px 15px;font-weight:700;font-size:13px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;white-space:nowrap">Install</button>
-    <button onclick="hideInstallBanner()" style="
-      background:none;border:none;color:rgba(255,255,255,.4);
-      font-size:20px;cursor:pointer;padding:4px 2px;line-height:1">✕</button>
-  `;
-  Object.assign(banner.style, {
-    position:'fixed', bottom:'0', left:'0', right:'0', zIndex:'999',
-    display:'flex', alignItems:'center', gap:'12px',
-    padding:'14px 16px',
-    paddingBottom: 'calc(14px + env(safe-area-inset-bottom, 0px))',
-    background:'linear-gradient(135deg,#005f7a,#002535)',
-    borderTop:'1px solid rgba(0,188,212,.3)',
-    color:'#fff', fontFamily:"'DM Sans',sans-serif",
-    transform:'translateY(100%)', transition:'transform .3s ease',
-  });
-  document.body.appendChild(banner);
-  requestAnimationFrame(() => requestAnimationFrame(() => banner.style.transform = 'translateY(0)'));
-}
-
-function hideInstallBanner() {
-  sessionStorage.setItem('installDismissed', '1');
-  const b = document.getElementById('install-banner');
-  if (b) { b.style.transform = 'translateY(100%)'; setTimeout(() => b.remove(), 350); }
-}
-
-function triggerInstall() {
-  hideInstallBanner();
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-  } else {
-    // iOS Safari fallback
-    alert('To install: tap the Share button (□↑) then "Add to Home Screen"');
-  }
-}
-</script>
-</body>
-</html>
+        <div cl
