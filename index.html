@@ -206,6 +206,9 @@
 </div>
 
 <script>
+/* ══════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════ */
 const BASE = 'https://stats.sharksice.timetoscore.com';
 const LEAGUES = {
   beer: {
@@ -229,12 +232,18 @@ const PROXIES = [
 ];
 const REFRESH_MS = 5 * 60 * 1000;
 
+/* ══════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════ */
 let curLeague = 'beer';
 let games = [], dates = [], selDate = '';
-let locker = {};
+let locker = {};       // gameId -> { homeLR, awayLR, homeTeam, awayTeam }
 let refreshTO = null, cdInterval = null, cdSecs = REFRESH_MS / 1000;
 let busy = false;
 
+/* ══════════════════════════════════════════
+   DATE HELPERS
+   ══════════════════════════════════════════ */
 const MONTHS = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
 const MLONG  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -265,6 +274,12 @@ function longLabel(iso) {
   return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 }
 
+/* ══════════════════════════════════════════
+   PARSE SCHEDULE HTML
+   Cols: 0=GameID, 1=Date, 2=Time, 3=Rink,
+         4=League, 5=Division, 6=Away, 7=AwayG,
+         8=Home, 9=HomeG, 10=Type, 11=Scoresheet
+   ══════════════════════════════════════════ */
 function parseSchedule(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const result = [];
@@ -272,29 +287,43 @@ function parseSchedule(html) {
     const cells = row.querySelectorAll('td');
     if (cells.length < 10) return;
     const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
+
     const rawDate = c(1);
     if (!rawDate.match(/[A-Z][a-z]+ [A-Z][a-z]+ \d+/)) return;
     const iso = parseRawDate(rawDate);
     if (!iso) return;
+
+    // Extract game ID from first cell (may be a link like "571725*" or plain "572770")
     const rawId = cells[0]?.textContent.replace(/\u00a0/g,' ').trim().replace('*','') ?? '';
     const gameId = rawId.match(/^\d+$/) ? rawId : null;
+
+    // Scoresheet link: <a href="oss-scoresheet?game_id=571725&mode=display">
     const ssLink = cells[0]?.querySelector('a[href*="oss-scoresheet"]');
     const scoresheetUrl = ssLink ? `${BASE}/${ssLink.getAttribute('href')}` : null;
+
     const awayG = c(7), homeG = c(9);
     result.push({
       date: iso, time: c(2),
       rink: c(3).replace(/San Jose\s*/i,'').trim(),
       division: c(5) || 'Unknown Division',
-      away: c(6), awayG, home: c(8), homeG,
+      away: c(6), awayG,
+      home: c(8), homeG,
       awayWins: !!(awayG && homeG && parseInt(awayG) > parseInt(homeG)),
       homeWins: !!(awayG && homeG && parseInt(homeG) > parseInt(awayG)),
       hasScore: !!(awayG && homeG),
-      gameId, scoresheetUrl,
+      gameId,
+      scoresheetUrl,
     });
   });
   return result;
 }
 
+/* ══════════════════════════════════════════
+   PARSE LOCKER ROOM HTML
+   Cols: 0=GameID, 1=Date, 2=Time, 3=Rink,
+         4=League, 5=Home, 6=HomeLR,
+         7=Away, 8=AwayLR
+   ══════════════════════════════════════════ */
 function parseLockerRooms(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const map = {};
@@ -304,15 +333,24 @@ function parseLockerRooms(html) {
     const c = i => cells[i]?.textContent.replace(/\u00a0/g,' ').trim() ?? '';
     const id = c(0);
     if (!id.match(/^\d+$/)) return;
-    map[id] = { homeTeam: c(5), homeLR: c(6), awayTeam: c(7), awayLR: c(8) };
+    map[id] = {
+      homeTeam: c(5), homeLR: c(6),
+      awayTeam: c(7), awayLR: c(8),
+    };
   });
   return map;
 }
 
+/* ══════════════════════════════════════════
+   FETCH WITH PROXY FALLBACK
+   ══════════════════════════════════════════ */
 async function fetchWithFallback(url) {
   for (const proxy of PROXIES) {
     try {
-      const res = await fetch(proxy(url), { cache:'no-store' });
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      const res = await fetch(proxy(url), { cache:'no-store', signal: controller.signal });
+      clearTimeout(timeout);
       if (!res.ok) continue;
       const text = await res.text();
       if (text.includes('<table') || text.includes('<TABLE')) return text;
@@ -321,33 +359,56 @@ async function fetchWithFallback(url) {
   throw new Error('All proxies failed — check your connection.');
 }
 
+/* ══════════════════════════════════════════
+   MAIN FETCH
+   ══════════════════════════════════════════ */
 async function doFetch() {
-  if (busy) return;
+  if (busy) {
+    // Force-unlock if somehow stuck
+    busy = false;
+  }
   busy = true;
   setBtnSpin(true);
   setStatus('Refreshing…');
   clearTimers();
+
+  // Hard safety timeout — unlock UI after 30s no matter what
+  const safetyTimer = setTimeout(() => {
+    busy = false;
+    setBtnSpin(false);
+    setStatus('Timed out — tap Refresh');
+  }, 30000);
+
   try {
     const league = LEAGUES[curLeague];
+
+    // Fetch all schedule URLs for this league (HS has two), merge results
     const allHtmls = await Promise.all(league.urls.map(u => fetchWithFallback(u)));
     const allGames = allHtmls.flatMap(html => parseSchedule(html));
+
+    // Deduplicate by gameId (HS Saturday URL overlaps with weekday URL)
     const seen = new Set();
     games = allGames.filter(g => {
       if (!g.gameId) return true;
       if (seen.has(g.gameId)) return false;
       seen.add(g.gameId); return true;
     });
+
     dates = [...new Set(games.map(g => g.date))].sort();
+
+    // Fetch locker rooms (beer league only, fire and forget)
     locker = {};
     if (league.lrUrl) {
       fetchWithFallback(league.lrUrl)
         .then(html => { locker = parseLockerRooms(html); renderContent(); })
         .catch(() => {});
     }
+
     const today = todayISO();
     if (!selDate || !dates.includes(selDate)) {
       selDate = dates.find(d => d >= today) || dates[dates.length-1] || '';
     }
+
     renderStrip();
     renderContent();
     startCountdown();
@@ -355,11 +416,15 @@ async function doFetch() {
     showError(e.message);
     setStatus('Failed to load');
   } finally {
+    clearTimeout(safetyTimer);
     busy = false;
     setBtnSpin(false);
   }
 }
 
+/* ══════════════════════════════════════════
+   LEAGUE SWITCH
+   ══════════════════════════════════════════ */
 function switchLeague(id) {
   if (id === curLeague) return;
   curLeague = id;
@@ -367,53 +432,4 @@ function switchLeague(id) {
   document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
   document.getElementById('ltab-' + id).classList.add('active');
   document.getElementById('date-strip').innerHTML = '';
-  document.getElementById('content').innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
-  doFetch();
-}
-
-function clearTimers() { clearTimeout(refreshTO); clearInterval(cdInterval); }
-function startCountdown() {
-  cdSecs = REFRESH_MS / 1000;
-  updateStatus();
-  cdInterval = setInterval(() => { cdSecs--; updateStatus(); if (cdSecs <= 0) { clearInterval(cdInterval); doFetch(); } }, 1000);
-  refreshTO = setTimeout(doFetch, REFRESH_MS);
-}
-function updateStatus() {
-  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  const m = Math.floor(cdSecs/60), s = cdSecs%60;
-  setStatus(`Updated ${now} · refresh in <b>${m}:${String(s).padStart(2,'0')}</b>`);
-}
-function setStatus(html) { document.getElementById('status').innerHTML = html; }
-function setBtnSpin(on) { document.getElementById('rfbtn').classList.toggle('spin', on); }
-
-function renderStrip() {
-  const today = todayISO();
-  const strip = document.getElementById('date-strip');
-  strip.innerHTML = '';
-  dates.forEach(d => {
-    const el = document.createElement('span');
-    el.className = 'dchip' + (d===selDate?' active':'') + (d===today?' today':'');
-    el.textContent = chipLabel(d);
-    el.onclick = () => { selDate = d; renderStrip(); renderContent(); };
-    strip.appendChild(el);
-  });
-  strip.querySelector('.active')?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
-}
-
-function renderContent() {
-  const el = document.getElementById('content');
-  const day = games.filter(g => g.date === selDate);
-  if (!day.length) {
-    el.innerHTML = `<div class="empty"><div class="ico">🏒</div><div class="msg">No games scheduled<br>for ${longLabel(selDate)||selDate}</div></div>`;
-    return;
-  }
-  const divMap = {};
-  day.forEach(g => { if (!divMap[g.division]) divMap[g.division]=[]; divMap[g.division].push(g); });
-  const divs = Object.keys(divMap).sort();
-  const icons = ['🏅','🥇','🥈','🥉','🏆','⭐','🎖️','💎','🔵','🟢'];
-  let html = `
-    <div id="day-banner">
-      <div class="dname">${longLabel(selDate)}</div>
-      <div id="day-stats">
-        <div class="stat"><div class="v">${day.length}</div><div class="l">Games</div></div>
-        <div cl
+  document.getElementById('content').innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"
